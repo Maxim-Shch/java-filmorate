@@ -29,6 +29,7 @@ public class UserController {
         users.put(user.getId(), user);
         return user;
     }
+
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) { //обновление пользователя;
         if (users.containsKey(user.getId())) {
