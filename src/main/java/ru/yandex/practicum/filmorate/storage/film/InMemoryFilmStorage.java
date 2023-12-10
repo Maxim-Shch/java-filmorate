@@ -9,12 +9,13 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
 
     private final Map<Integer, Film> films = new HashMap<>();
     private Integer generatorId = 0;
-    
+
     @Override
     public Film addNewFilm(Film film) {
         validateFilm(film);
