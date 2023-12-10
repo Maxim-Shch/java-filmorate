@@ -1,58 +1,75 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import org.springframework.web.server.ResponseStatusException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("users")
 public class UserController {
+    private final UserStorage userStorage;
+    private final UserService userService;
 
-    private final Map<Integer, User> users = new HashMap<>();
-    private Integer generatorId = 0;
+    @Autowired
+    public UserController(UserStorage userStorage, UserService userService) {
+        this.userStorage = userStorage;
+        this.userService = userService;
+    }
 
     @GetMapping
     public Collection<User> findAll() { //получение списка всех пользователей.
-        return users.values();
+        return userStorage.findAll();
     }
 
     @PostMapping
     public User createUser(@Valid @RequestBody User user) { //имя для отображения может быть пустым — в таком случае будет использован логин;
-        validateUser(user);
-        user.setId(++generatorId);
-        users.put(user.getId(), user);
-        return user;
+        return userStorage.createUser(user);
     }
 
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) { //обновление пользователя;
-        if (users.containsKey(user.getId())) {
-            validateUser(user);
-            users.put(user.getId(), user);
-        } else {
-            throw new ValidationException("Пользователя с данным id не существует.");
-        }
-        return user;
+        return userStorage.updateUser(user);
     }
 
-    private void validateUser(User user) {
-        if (user.getEmail() == null || !user.getEmail().contains("@")) {
-            throw new ValidationException("email не должен быть пустым и должен содержать символ @");
+    @GetMapping("/{id}")
+    public User findById(@PathVariable("id") Integer id) {
+        try {
+            return userStorage.findById(id);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден", e);
         }
-        if (user.getLogin() == null || user.getLogin().contains(" ")) {
-            throw new ValidationException("логин не может быть пустым и содержать пробелы");
+    }
+
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addNewFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) {
+        try {
+            userService.addNewFriend(id, friendId);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден", e);
         }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            throw new ValidationException("дата рождения не может быть в будущем");
-        }
-        if (user.getName() == null || user.getName().isEmpty()) {
-            user.setName(user.getLogin());
-        }
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void deleteFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) {
+        userService.deleteFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public Collection<User> getUsersFriends(@PathVariable("id") Integer id) {
+        return userService.getUsersFriends(id);
+    }
+
+    @GetMapping("/{id}/friends/common/{otherId}")
+    public Collection<User> findCommonFriends(@PathVariable("id") Integer id,
+                                              @PathVariable("otherId") Integer otherId) {
+        return userService.findCommonFriends(id, otherId);
     }
 }
