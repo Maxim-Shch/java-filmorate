@@ -7,7 +7,6 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import javax.validation.Valid;
 import java.util.Collection;
@@ -18,42 +17,43 @@ import java.util.Collection;
 public class FilmController {
 
     private final FilmService filmService;
-    private final FilmStorage filmStorage;
 
     @Autowired
-    public FilmController(FilmService filmService, FilmStorage filmStorage) {
+    public FilmController(FilmService filmService) {
         this.filmService = filmService;
-        this.filmStorage = filmStorage;
     }
 
     @PostMapping
     public Film addNewFilm(@Valid @RequestBody Film film) { //добавляем фильм
-        return filmStorage.addNewFilm(film);
+        return filmService.addNewFilm(film);
     }
 
     @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) { //обновляем фильм
-        return filmStorage.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
     @GetMapping
     public Collection<Film> findAll() { //возращает коллекцию всех фильмов
-        return filmStorage.findAll();
+        return filmService.findAll();
     }
 
     @GetMapping("/{id}")
     public Film findById(@PathVariable("id") Integer id) {
         try {
-            return filmStorage.findById(id);
+            return filmService.findById(id);
         } catch (NotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Фильм не найден", e);
         }
-
     }
 
     @PutMapping("/{id}/like/{userId}")
     public void addNewLike(@PathVariable("id") Integer id, @PathVariable("userId") Integer userId) {
-        filmService.addNewLike(userId, id);
+        try {
+            filmService.addNewLike(userId, id);
+        } catch (NotFoundException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/{id}/like/{userId}")

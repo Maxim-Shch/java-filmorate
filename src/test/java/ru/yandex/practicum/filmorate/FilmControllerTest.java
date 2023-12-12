@@ -28,7 +28,7 @@ public class FilmControllerTest {
         filmStorage = new InMemoryFilmStorage();
         userStorage = new InMemoryUserStorage();
         filmService = new FilmService(filmStorage, userStorage);
-        filmController = new FilmController(filmService, filmStorage);
+        filmController = new FilmController(filmService);
     }
 
     @Test
