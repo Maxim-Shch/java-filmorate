@@ -5,27 +5,25 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.dao.FriendListDao;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
     private final UserStorage userStorage;
+    private final FriendListDao friendListDao;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, FriendListDao friendListDao) {
         this.userStorage = userStorage;
+        this.friendListDao = friendListDao;
     }
 
     public void addNewFriend(Integer userId, Integer friendId) {
-        User user = userStorage.findById(userId);
-        User friend = userStorage.findById(friendId);
-        user.setFriends(friendId);
-        friend.setFriends(userId);
+        friendListDao.addFriend(userId, friendId);
 
     }
 
@@ -48,30 +46,16 @@ public class UserService {
     }
 
     public void deleteFriend(Integer userId, Integer friendId) {
-        User user = userStorage.findById(userId);
-        User friend = userStorage.findById(friendId);
-        user.deleteFriend(friendId);
-        friend.deleteFriend(userId);
+        friendListDao.deleteFriend(userId, friendId);
     }
 
     public Collection<User> getUsersFriends(Integer id) {
-        User user = userStorage.findById(id);
-        return user.getFriends()
-                .stream()
-                .map(userStorage::findById)
-                .collect(Collectors.toList());
+        return friendListDao.getAll(id);
     }
 
     public Collection<User> findCommonFriends(Integer userId, Integer otherUserId) {
-        User user = userStorage.findById(userId);
-        User otherUser = userStorage.findById(otherUserId);
-        Set<Integer> userFriends = user.getFriends();
-        Set<Integer> otherUserFriends = otherUser.getFriends();
+        return friendListDao.getCommonFriends(userId, otherUserId);
 
-        return userFriends.stream()
-                .filter(otherUserFriends::contains)
-                .map(userStorage::findById)
-                .collect(Collectors.toList());
     }
 
     private void validateUser(User user) {
