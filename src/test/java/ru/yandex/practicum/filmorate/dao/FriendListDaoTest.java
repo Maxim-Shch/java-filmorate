@@ -34,9 +34,9 @@ public class FriendListDaoTest {
 
     @Test
     public void testAddFriend() {
-        User newUser = new User( "user@email.ru", "vanya123", "Ivan Petrov",
+        User newUser = new User("user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
-        User newUser2 = new User( "user@email.ru", "sasha123", "Sasha Petrov",
+        User newUser2 = new User("user@email.ru", "sasha123", "Sasha Petrov",
                 LocalDate.of(1990, 1, 1));
         userStorage.createUser(newUser);
         userStorage.createUser(newUser2);
@@ -46,9 +46,9 @@ public class FriendListDaoTest {
 
     @Test
     public void testDeleteFriend() {
-        User newUser = new User( "user@email.ru", "vanya123", "Ivan Petrov",
+        User newUser = new User("user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
-        User newUser2 = new User( "user@email.ru", "sasha123", "Sasha Petrov",
+        User newUser2 = new User("user@email.ru", "sasha123", "Sasha Petrov",
                 LocalDate.of(1990, 1, 1));
         userStorage.createUser(newUser);
         userStorage.createUser(newUser2);
@@ -59,9 +59,9 @@ public class FriendListDaoTest {
 
     @Test
     public void testGetAllFriends() {
-        User newUser = new User( "user@email.ru", "vanya123", "Ivan Petrov",
+        User newUser = new User("user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
-        User newUser2 = new User( "user@email.ru", "sasha123", "Sasha Petrov",
+        User newUser2 = new User("user@email.ru", "sasha123", "Sasha Petrov",
                 LocalDate.of(1990, 1, 1));
         userStorage.createUser(newUser);
         userStorage.createUser(newUser2);
@@ -78,11 +78,11 @@ public class FriendListDaoTest {
 
     @Test
     public void testGetCommonFriends() {
-        User newUser = new User( "user@email.ru", "vanya123", "Ivan Petrov",
+        User newUser = new User("user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
-        User newUser2 = new User( "user@email.ru", "sasha123", "Sasha Petrov",
+        User newUser2 = new User("user@email.ru", "sasha123", "Sasha Petrov",
                 LocalDate.of(1990, 1, 1));
-        User commonFriend = new User( "common@email.ru", "common", "Vasya Petrov",
+        User commonFriend = new User("common@email.ru", "common", "Vasya Petrov",
                 LocalDate.of(1990, 1, 1));
         userStorage.createUser(newUser);
         userStorage.createUser(newUser2);

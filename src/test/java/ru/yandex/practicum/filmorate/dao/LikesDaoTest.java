@@ -43,7 +43,7 @@ public class LikesDaoTest {
         GenresDao genresDao = new GenresDaoImpl(jdbcTemplate);
         FilmStorage filmStorage = new FilmDbStorage(jdbcTemplate, likesDao, genresDao);
 
-        User newUser = new User( "user@email.ru", "vanya123", "Ivan Petrov",
+        User newUser = new User("user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
         userStorage.createUser(newUser);
 
@@ -67,11 +67,11 @@ public class LikesDaoTest {
         GenresDao genresDao = new GenresDaoImpl(jdbcTemplate);
         FilmStorage filmStorage = new FilmDbStorage(jdbcTemplate, likesDao, genresDao);
 
-        User newUser = new User( "user@email.ru", "vanya123", "Ivan Petrov",
+        User newUser = new User("user@email.ru", "vanya123", "Ivan Petrov",
                 LocalDate.of(1990, 1, 1));
         userStorage.createUser(newUser);
 
-        Film newFilm = new Film( "filmOne", "новый единичный фильм",
+        Film newFilm = new Film("filmOne", "новый единичный фильм",
                 LocalDate.of(2000, 1, 1), 60,
                 new Mpa(1, "G", "Нет возрастных ограничений"));
         filmStorage.addNewFilm(newFilm);
@@ -91,7 +91,7 @@ public class LikesDaoTest {
                 LocalDate.of(1990, 1, 1));
         userStorage.createUser(newUser);
 
-        Film newFilm = new Film( "filmOne", "новый единичный фильм",
+        Film newFilm = new Film("filmOne", "новый единичный фильм",
                 LocalDate.of(2000, 1, 1), 60,
                 new Mpa(1, "G", "Нет возрастных ограничений"));
         filmStorage.addNewFilm(newFilm);
