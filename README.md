@@ -1,3 +1,3 @@
 # java-filmorate
 Template repository for Filmorate project.
-![Untitled](https://github.com/Maxim-Shch/java-filmorate/assets/135393523/44bf8ffa-5b96-4a82-8aa6-502dc2af739c)
+![Схема БД](https://github.com/Maxim-Shch/java-filmorate/assets/135393523/684ba61c-fc89-4ada-8501-676cbaee0dc2)
