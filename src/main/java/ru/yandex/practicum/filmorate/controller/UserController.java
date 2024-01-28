@@ -1,10 +1,7 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
@@ -38,20 +35,12 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User findById(@PathVariable("id") Integer id) {
-        try {
-            return userService.findById(id);
-        } catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден", e);
-        }
+        return userService.findById(id);
     }
 
     @PutMapping("/{id}/friends/{friendId}")
     public void addNewFriend(@PathVariable("id") Integer id, @PathVariable("friendId") Integer friendId) {
-        try {
-            userService.addNewFriend(id, friendId);
-        } catch (NotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден", e);
-        }
+        userService.addNewFriend(id, friendId);
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")

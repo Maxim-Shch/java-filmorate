@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
@@ -47,11 +48,11 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        if (films.containsKey(id)) {
-            films.remove(id);
-        } else {
-            throw new NotFoundException(String.format("Фильм с id = %d не найден.", id));
-        }
+    public Collection<Film> findTheMostPopulars(Integer count) {
+        return findAll()
+                .stream()
+                .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
+                .limit(count)
+                .collect(Collectors.toList());
     }
 }

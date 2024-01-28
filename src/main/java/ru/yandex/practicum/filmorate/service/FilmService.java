@@ -1,24 +1,23 @@
 package ru.yandex.practicum.filmorate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.film.dao.LikesDao;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.stream.Collectors;
-
 
 @Service
+@RequiredArgsConstructor
 public class FilmService {
 
     private final FilmStorage filmStorage;
-    private final UserStorage userStorage;
+    private final LikesDao likesDao;
 
     @PostMapping
     public Film addNewFilm(@Valid @RequestBody Film film) { //добавляем фильм
@@ -42,30 +41,16 @@ public class FilmService {
         return filmStorage.findById(id);
     }
 
-    @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
-        this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
-    }
-
     public void addNewLike(Integer userId, Integer filmId) {
-        Film film = filmStorage.findById(filmId);
-        userStorage.findById(userId);
-        film.setLikes(filmId);
+        likesDao.addLikeToFilm(filmId, userId);
     }
 
     public void deleteLike(Integer userId, Integer filmId) {
-        Film film = filmStorage.findById(filmId);
-        userStorage.findById(userId);
-        film.deleteLike(filmId);
+        likesDao.deleteLikeFromFilm(filmId, userId);
     }
 
     public Collection<Film> findTheMostPopulars(Integer count) {
-        return filmStorage.findAll()
-                .stream()
-                .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
-                .limit(count)
-                .collect(Collectors.toList());
+        return filmStorage.findTheMostPopulars(count);
     }
 
     private void validateFilm(Film film) {
